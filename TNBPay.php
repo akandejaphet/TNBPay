@@ -50,7 +50,10 @@ function tnbpay_init() {
             $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
 
             // Save settings in admin if you have any defined
+            $this->description = $this->method_description;
             add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+
+            add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
         }
 
         /**
@@ -65,6 +68,33 @@ function tnbpay_init() {
                     'desc_tip'      => true
                 )
             );
+        }
+
+        
+        /**
+         * Output the payment information onto the thank you page.
+         *
+         * @param  int $order_id  The order ID.
+         */
+        public function thank_you_page( $order_id )
+        {
+            $order = wc_get_order( $order_id );
+            
+            if ( !$order->needs_payment() ) {
+                $this->log( 'Order does not need payment' );
+                return;
+            }
+
+            $paymentSuccess = $this->complete_order_internal( $order_id );
+        
+            if ( $paymentSuccess ) {
+                $this->log( 'Order is already payed' );
+                return;
+            }
+            
+            ?>
+            <h1>sdsfsjfhjshfhsjfjshhfhjshfhgfkjshhsjh</h1>
+            <?php
         }
     }
 }
