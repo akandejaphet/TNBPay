@@ -34,6 +34,7 @@ function tnbpay_init() {
 
             
             $this->title              = "TNB Pay";
+            $this->supports = array( 'products' );
 
             $this->init();
         }
@@ -72,6 +73,29 @@ function tnbpay_init() {
 
         
         /**
+         * Process the payment.
+         *
+         * @param int $order_id  The order ID to update.
+         */
+        function process_payment( $order_id ) {
+            global $woocommerce;
+            $order = new WC_Order( $order_id );
+        
+            // Mark as on-hold (we're awaiting the cheque)
+            $order->update_status('pending-payment', __( 'Awaiting TNB payment', 'woocommerce' ));
+        
+            // Remove cart
+            $woocommerce->cart->empty_cart();
+        
+            // Return thankyou redirect
+            return array(
+                'result' => 'success',
+                'redirect' => $this->get_return_url( $order )
+            );
+        }
+
+        
+        /**
          * Output the payment information onto the thank you page.
          *
          * @param  int $order_id  The order ID.
@@ -81,19 +105,20 @@ function tnbpay_init() {
             $order = wc_get_order( $order_id );
             
             if ( !$order->needs_payment() ) {
-                $this->log( 'Order does not need payment' );
-                return;
-            }
-
-            $paymentSuccess = $this->complete_order_internal( $order_id );
-        
-            if ( $paymentSuccess ) {
-                $this->log( 'Order is already payed' );
+                // $this->log( 'Order does not need payment' );
                 return;
             }
             
             ?>
-            <h1>sdsfsjfhjshfhsjfjshhfhjshfhgfkjshhsjh</h1>
+            
+            <p>Use this memo: <?php echo( esc_html($order->get_meta('avax_memo')) ); ?> </p>
+            <form action="" method="POST">
+                <label for="wallet">Your wallet address:</label>
+                <input type="text" id="wallet" name="wallet"><br><br>
+                <label for="wallet">Your transaction ID:</label>
+                <input type="text" id="id" name="id"><br><br>
+                <input type="submit" value="Submit">
+            </form>
             <?php
         }
     }
