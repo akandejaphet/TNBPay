@@ -81,11 +81,17 @@ function tnbpay_init() {
             global $woocommerce;
             $order = new WC_Order( $order_id );
         
+            if($order->get_meta('tnb_memo') == ''){
+                $order->update_meta_data('tnb_memo', base64_encode(rand(100000000,999999999)));
+                $order->save();
+            }
+
             // Mark as on-hold (we're awaiting the cheque)
             $order->update_status('pending-payment', __( 'Awaiting TNB payment', 'woocommerce' ));
-        
+            
             // Remove cart
             $woocommerce->cart->empty_cart();
+            
         
             // Return thankyou redirect
             return array(
@@ -111,7 +117,7 @@ function tnbpay_init() {
             
             ?>
             
-            <p>Use this memo: <?php echo( esc_html($order->get_meta('avax_memo')) ); ?> </p>
+            <p>Use this memo: <?php echo( esc_html($order->get_meta('tnb_memo')) ); ?> </p>
             <form action="" method="POST">
                 <label for="wallet">Your wallet address:</label>
                 <input type="text" id="wallet" name="wallet"><br><br>
