@@ -62,7 +62,7 @@ function tnbpay_init() {
          */
         function init_form_fields() {
             $this->form_fields = array(
-                'title' => array(
+                'tnb_wallet_address' => array(
                     'title' => __( 'Store Address', 'woocommerce' ),
                     'type' => 'text',
                     'description' => __( 'This is the address the user pays to.', 'woocommerce' ),
@@ -116,20 +116,52 @@ function tnbpay_init() {
             }
             
             ?>
+
+
+            <script type="text/javascript" >
+            jQuery(document).ready(function($) {
+
+                var data = {
+                    'action': 'check_tnb_transaction',
+                    'order_id': window.location.pathname.split('/')[4]
+                };
+
+                // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+                jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
+                    console.log('Server:', response);
+                });
+            });
+            </script>
             
             <p>Use this memo: <?php echo( esc_html($order->get_meta('tnb_memo')) ); ?> </p>
-            <form action="" method="POST">
-                <label for="wallet">Your wallet address:</label>
-                <input type="text" id="wallet" name="wallet"><br><br>
-                <label for="wallet">Your transaction ID:</label>
-                <input type="text" id="id" name="id"><br><br>
-                <input type="submit" value="Submit">
-            </form>
+            <p><?php echo( esc_html( $this->get_option( 'tnb_wallet_address' ) ) ); ?></p>
             <?php
         }
     }
 }
 add_action('plugins_loaded', 'tnbpay_init');
+
+add_action( 'wp_ajax_check_tnb_transaction', 'check_tnb_transaction' );
+
+function check_tnb_transaction() {
+	global $wpdb; // this is how you get access to the database
+
+    $order = wc_get_order( $_POST['order_id'] );
+
+    echo $order->needs_payment();
+
+	wp_die(); // this is required to terminate immediately and return a proper response
+}
+
+
+function my_enqueue() {
+
+    wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
+
+    wp_localize_script( 'ajax-script', 'tnb_ajax_object',
+            array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+}
+add_action( 'wp_enqueue_scripts', 'my_enqueue' );
 
 function add_your_gateway_class( $methods ) {
     $methods[] = 'WC_Gateway_Your_Gateway'; 
