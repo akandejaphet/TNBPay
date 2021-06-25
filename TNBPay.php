@@ -29,7 +29,7 @@ function tnbpay_init() {
             $this->id                 = 'tnbpay';
             $this->method_title       = __( 'TNBPay', 'woo-tnbpay' );
             $this->method_description = sprintf( __( 'TNBPay is a payment method on the TNB network' ));
-            $this->has_fields         = true;
+            // $this->has_fields         = true;
             $this->icon = 'https://www.thenewboston.com/static/media/thenewboston-primary.52b925da.svg';
 
             
@@ -114,6 +114,9 @@ function tnbpay_init() {
                 // $this->log( 'Order does not need payment' );
                 return;
             }
+
+
+            require plugin_dir_path( __FILE__ ) . 'inc/success_modal.php';
             
             ?>
 
@@ -132,6 +135,7 @@ function tnbpay_init() {
                 });
             });
             </script>
+
             
             <p>Use this memo: <?php echo( esc_html($order->get_meta('tnb_memo')) ); ?> </p>
             <p><?php echo( esc_html( $this->get_option( 'tnb_wallet_address' ) ) ); ?></p>
