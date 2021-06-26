@@ -1,4 +1,3 @@
-echo ('
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -197,4 +196,3 @@ border-color: #C80909;
                     jQuery('#exampleModal').modal('show');
                 });
             </script>
-');
