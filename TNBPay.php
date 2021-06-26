@@ -136,9 +136,6 @@ function tnbpay_init() {
             });
             </script>
 
-            
-            <p>Use this memo: <?php echo( esc_html($order->get_meta('tnb_memo')) ); ?> </p>
-            <p><?php echo( esc_html( $this->get_option( 'tnb_wallet_address' ) ) ); ?></p>
             <?php
         }
     }
