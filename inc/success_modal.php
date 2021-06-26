@@ -161,7 +161,7 @@ border-color: #C80909;
                <div class ="payment_box d-flex flex-column" > 
                     <div class = "p-2 empty_space"> </div>
                     <div class = "p-2 pay_det"> Account </div>
-                    <div class = "p-2 pay_box "> <?php esc_html( $this->get_option( 'tnb_wallet_address' ) ) ); ?></div>
+                    <div class = "p-2 pay_box "> <?php echo( esc_html( $this->get_option( 'tnb_wallet_address' ) ) ); ?></div>
 
                     <div class = "p-2 pay_det"> Memo </div>
                      <div class = "p-2 pay_box"> <?php echo( esc_html($order->get_meta('tnb_memo')) ); ?> </div>
