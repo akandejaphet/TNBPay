@@ -173,7 +173,7 @@ border-color: #C80909;
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary btn-lg">Payment Made, Next</button>
+          <button type="button" id="paymentVerify" class="btn btn-primary btn-lg">Payment Made, Next</button>
           
         </div>
       </div>

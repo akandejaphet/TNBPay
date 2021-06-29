@@ -127,7 +127,7 @@ function tnbpay_init() {
 
 
             <script type="text/javascript" >
-            jQuery(document).ready(function($) {
+            jQuery('#paymentVerify').click(function($) {
 
                 var data = {
                     'action': 'check_tnb_transaction',
@@ -183,8 +183,8 @@ function check_tnb_transaction() {
             return;
         }
     }
-    $order->set_status('canceled');
-    $order->save();
+    // $order->set_status('canceled');
+    // $order->save();
     echo ('false');
 
 	wp_die(); // this is required to terminate immediately and return a proper response
