@@ -55,6 +55,7 @@ function tnbpay_init() {
             // Save settings in admin if you have any defined
             $this->description = $this->method_description;
             add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
             add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
         }
@@ -68,6 +69,12 @@ function tnbpay_init() {
                     'title' => __( 'Store Address', 'woocommerce' ),
                     'type' => 'text',
                     'description' => __( 'This is the address the user pays to.', 'woocommerce' ),
+                    'desc_tip'      => true
+                ),
+                'tnb_rate' => array(
+                    'title' => __( 'Custom Rate', 'woocommerce' ),
+                    'type' => 'text',
+                    'description' => __( 'This is the custom rate (integer only).', 'woocommerce' ),
                     'desc_tip'      => true
                 )
             );
@@ -118,7 +125,7 @@ function tnbpay_init() {
             }
             
             
-            $rate = 0.02;
+            $rate = floatval($this->get_option( 'tnb_rate' ));
             $meta = $order->get_meta('tnb_memo');
             if('TNBC' === get_woocommerce_currency()){
                 $price = $order->get_total();
@@ -168,7 +175,7 @@ function check_tnb_transaction() {
 
     $order = wc_get_order( $_POST['order_id'] );
 
-    $rate = 0.02;
+    $rate = floatval($this->get_option( 'tnb_rate' ));
     $meta = $order->get_meta('tnb_memo');
 
     if('TNBC' === get_woocommerce_currency()){
