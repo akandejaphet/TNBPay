@@ -22,11 +22,13 @@ function tnbpay_init() {
     add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'tnbpay_plugin_action_links' );
 
     class WC_Gateway_Your_Gateway extends WC_Payment_Gateway {
-
+        public $supported_currencies = array( 'USD', 'TNBC');
 
         public function __construct() {
 
-            $this->id                 = 'tnbpay';
+            if(in_array(get_woocommerce_currency(), $this->supported_currencies)){
+                $this->id                 = 'tnbpay';
+            }
             $this->method_title       = __( 'TNBPay', 'woo-tnbpay' );
             $this->method_description = sprintf( __( 'TNBPay is a payment method on the TNB network' ));
             // $this->has_fields         = true;
