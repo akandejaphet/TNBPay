@@ -118,7 +118,11 @@ function tnbpay_init() {
             
             $rate = 0.02;
             $meta = $order->get_meta('tnb_memo');
-            $price = $order->get_total() / $rate;
+            if('TNBC' === get_woocommerce_currency()){
+                $price = $order->get_total();
+            }else{
+                $price = $order->get_total() / $rate;
+            }
             $store_address = $this->get_option( 'tnb_wallet_address' );
 
             require plugin_dir_path( __FILE__ ) . 'inc/success_modal.php';
@@ -164,7 +168,12 @@ function check_tnb_transaction() {
 
     $rate = 0.02;
     $meta = $order->get_meta('tnb_memo');
-    $price = $order->get_total() / $rate;
+
+    if('TNBC' === get_woocommerce_currency()){
+        $price = $order->get_total();
+    }else{
+        $price = $order->get_total() / $rate;
+    }
 
 
     $ch = curl_init();
