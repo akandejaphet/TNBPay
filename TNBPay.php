@@ -136,6 +136,14 @@ function tnbpay_init() {
 
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
+                    if(response == 'true'){
+                        alert('Payment Made');
+                        document.reload();
+                    }else{
+                        alert('Payment not made yet please verify.');
+                        // document.reload();
+                    }
+                    alert();
                     console.log('Server:', response);
                 });
             });
