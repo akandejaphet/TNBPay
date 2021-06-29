@@ -154,7 +154,38 @@ function check_tnb_transaction() {
 
     $order = wc_get_order( $_POST['order_id'] );
 
-    echo $order->needs_payment();
+    $rate = 0.02;
+    $meta = $order->get_meta('tnb_memo');
+    $price = $order->get_total() / $rate;
+
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL,"http://54.177.121.3/bank_transactions?limit=100");
+    // Receive server response ...
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $server_output = curl_exec($ch);
+
+    curl_close ($ch);
+    
+    $data = json_decode($server_output, true);
+
+    $response = $data['results'];
+    
+    foreach ($response as $key => $value) {
+        if($value['memo'] == $meta && $value['amount'] == $price)
+        {
+            $order->set_status('completed');
+            $order->save();
+            echo ('true');
+            wp_die();
+            return;
+        }
+    }
+    $order->set_status('canceled');
+    $order->save();
+    echo ('false');
 
 	wp_die(); // this is required to terminate immediately and return a proper response
 }
