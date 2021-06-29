@@ -86,6 +86,7 @@ display: flex;
 flex-direction: column;
 margin-top: 30px;
 gap: 10px;
+overflow: hidden;
 }
 
 .pay_det {
