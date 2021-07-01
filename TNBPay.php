@@ -177,6 +177,7 @@ function check_tnb_transaction() {
 
     $rate = floatval($this->get_option( 'tnb_rate' ));
     $meta = $order->get_meta('tnb_memo');
+    $store_address = $this->get_option( 'tnb_wallet_address' );
 
     if('TNBC' === get_woocommerce_currency()){
         $price = $order->get_total();
@@ -200,7 +201,7 @@ function check_tnb_transaction() {
     $response = $data['results'];
     
     foreach ($response as $key => $value) {
-        if($value['memo'] == $meta && $value['amount'] == $price)
+        if($value['memo'] == $meta && $value['amount'] == $price && $value['recipient'] == $store_address )
         {
             $order->set_status('completed');
             $order->save();
