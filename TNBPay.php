@@ -187,7 +187,7 @@ function check_tnb_transaction() {
 
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL,"http://54.177.121.3/bank_transactions?limit=100");
+    curl_setopt($ch, CURLOPT_URL,"http://54.183.16.19/bank_transactions?limit=100");
     // Receive server response ...
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
