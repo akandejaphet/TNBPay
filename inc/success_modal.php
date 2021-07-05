@@ -1,17 +1,4 @@
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap') ;
 
@@ -124,14 +111,9 @@ border-color: #C80909;
 
 </style>
 
-
-<body>
-
-<div class="">
-  
   <!-- Modal -->
-  <div id="myModal" role="dialog">
-    <div class="modal-dialog modal-sm">
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
     
       <!-- Modal content-->
       <div class="modal-content">
@@ -175,17 +157,10 @@ border-color: #C80909;
         </div>
         <div class="modal-footer">
           <button type="button" id="paymentVerify" class="btn btn-primary btn-lg">Payment Made, Next</button>
-          
-        </div>
-      </div>
       
     </div>
   </div>
-  
-</div>
 
-</body>
-</html>
 
 
                 </div>
