@@ -17,13 +17,6 @@
  * Initialize the translation
  */
 function tnbpay_init() {
-    function my_scripts() {
-        wp_enqueue_style('bootstrap4', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css');
-        wp_enqueue_script( 'boot1','https://code.jquery.com/jquery-3.3.1.slim.min.js', array( 'jquery' ),'',true );
-        wp_enqueue_script( 'boot2','https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js', array( 'jquery' ),'',true );
-        wp_enqueue_script( 'boot3','https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js', array( 'jquery' ),'',true );
-    }
-    add_action( 'wp_enqueue_scripts', 'my_scripts' );
     
     load_plugin_textdomain( 'tnbpay', false, basename( dirname( __FILE__ ) ) . '/languages/' );
     
@@ -59,6 +52,8 @@ function tnbpay_init() {
             // Load the settings API
             $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
             $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
+
+            define("GREETING", "Welcome to W3Schools.com!");
 
             // Save settings in admin if you have any defined
             $this->description = $this->method_description;
@@ -181,11 +176,16 @@ add_action( 'wp_ajax_check_tnb_transaction', 'check_tnb_transaction' );
 function check_tnb_transaction() {
 	global $wpdb; // this is how you get access to the database
 
+    $value = $wpdb->get_results( $wpdb->prepare(
+        " SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_tnbpay_settings' "
+    ) );
+    $serialized_data = (object)unserialize( $value[0]->option_value ); 
+
     $order = wc_get_order( $_POST['order_id'] );
 
-    $rate = floatval($this->get_option( 'tnb_rate' ));
+    $rate = floatval($serialized_data->tnb_rate);
     $meta = $order->get_meta('tnb_memo');
-    $store_address = $this->get_option( 'tnb_wallet_address' );
+    $store_address = $serialized_data->tnb_wallet_address;
 
     if('TNBC' === get_woocommerce_currency()){
         $price = $order->get_total();
@@ -227,6 +227,10 @@ function check_tnb_transaction() {
 
 
 function my_enqueue() {
+        wp_enqueue_style('bootstrap4', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css');
+        wp_enqueue_script( 'boot1','https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js', array( 'jquery' ),'',true );
+        wp_enqueue_script( 'boot2','https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js', array( 'jquery' ),'',true );
+        wp_enqueue_script( 'boot3','https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js', array( 'jquery' ),'',true );
 
     wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
 
