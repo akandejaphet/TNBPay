@@ -154,12 +154,10 @@ function tnbpay_init() {
                 jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
                     if(response == 'true'){
                         alert('Payment Made');
-                        document.reload();
+                        location.reload();
                     }else{
                         alert('Payment not made yet please verify.');
-                        // document.reload();
                     }
-                    alert();
                     console.log('Server:', response);
                 });
             });
