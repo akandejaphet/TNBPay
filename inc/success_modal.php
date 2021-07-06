@@ -170,6 +170,9 @@ border-color: #C80909;
 
             <script type="text/javascript">
                 jQuery(window).on('load',function(){
-                    jQuery('#exampleModal').modal('show');
+                  jQuery('#exampleModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                  });
                 });
             </script>
