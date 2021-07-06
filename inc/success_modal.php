@@ -1,4 +1,3 @@
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap') ;
 
@@ -94,7 +93,9 @@ text-transform: capitalize;
 }
 
 .modal-footer {
-  text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
 }
 
@@ -169,9 +170,6 @@ border-color: #C80909;
 
             <script type="text/javascript">
                 jQuery(window).on('load',function(){
-                    jQuery('#exampleModal').modal({
-                      backdrop: 'static',
-                      keyboard: false
-                    });
+                    jQuery('#exampleModal').modal('show');
                 });
             </script>
