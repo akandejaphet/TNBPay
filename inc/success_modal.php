@@ -110,6 +110,10 @@ border-radius: 100px;
 border-color: #C80909;
 }
 
+.modal-backdrop{
+  display: none;
+}
+
 </style>
 
   <!-- Modal -->
