@@ -130,7 +130,7 @@ border-color: #C80909;
 
         <div class = "await "> 
           <div class="await_payment"> Awaiting payment </div> 
-          <div class="timer"> 00:10 </div>
+          <div class="timer" id="tnb_timer">  </div>
         </div>
        <hr/>
       <br>
