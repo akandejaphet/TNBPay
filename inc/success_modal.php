@@ -119,6 +119,10 @@
     display: none;
   }
 
+  .modal-tnb {
+    background-color: #00000080;
+  }
+
   @media screen and (min-width: 676px) {
     .modal-dialog {
       max-width: 350px;
@@ -128,7 +132,7 @@
 </style>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-tnb fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
 
     <!-- Modal content-->
