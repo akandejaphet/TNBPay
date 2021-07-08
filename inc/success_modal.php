@@ -130,7 +130,7 @@ border-color: #C80909;
       <div class="modal-content">
         <div class="modal-header">
           <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-          <h4 class="modal-title">TnbPay</h4>
+          <h5 class="modal-title">TnbPay</h5>
           <div class = "await "> 
            <div class="timer" id="tnb_timer">  </div>
         </div> </div>
