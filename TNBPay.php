@@ -16,28 +16,31 @@
 /**
  * Initialize the translation
  */
-function tnbpay_init() {
-    
-    load_plugin_textdomain( 'tnbpay', false, basename( dirname( __FILE__ ) ) . '/languages/' );
-    
-    add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'tnbpay_plugin_action_links' );
+function tnbpay_init()
+{
 
-    class WC_Gateway_Your_Gateway extends WC_Payment_Gateway {
-        public $supported_currencies = array( 'USD', 'TNBC');
+    load_plugin_textdomain('tnbpay', false, basename(dirname(__FILE__)) . '/languages/');
 
-        public function __construct() {
+    add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'tnbpay_plugin_action_links');
 
-            if(in_array(get_woocommerce_currency(), $this->supported_currencies)){
+    class WC_Gateway_Your_Gateway extends WC_Payment_Gateway
+    {
+        public $supported_currencies = array('USD', 'TNBC');
+
+        public function __construct()
+        {
+
+            if (in_array(get_woocommerce_currency(), $this->supported_currencies)) {
                 $this->id                 = 'tnbpay';
             }
-            $this->method_title       = __( 'TNBPay', 'woo-tnbpay' );
-            $this->method_description = sprintf( __( 'TNBPay is a payment method on the TNB network' ));
+            $this->method_title       = __('TNBPay', 'woo-tnbpay');
+            $this->method_description = sprintf(__('TNBPay is a payment method on the TNB network'));
             // $this->has_fields         = true;
             $this->icon = 'https://www.thenewboston.com/static/media/thenewboston-primary.52b925da.svg';
 
-            
+
             $this->title              = "TNB Pay";
-            $this->supports = array( 'products' );
+            $this->supports = array('products');
 
             $this->init();
         }
@@ -48,7 +51,8 @@ function tnbpay_init() {
          * @access public
          * @return void
          */
-        function init() {
+        function init()
+        {
             // Load the settings API
             $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
             $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
@@ -57,110 +61,112 @@ function tnbpay_init() {
 
             // Save settings in admin if you have any defined
             $this->description = $this->method_description;
-            add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
-            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+            add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
+            add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
 
-            add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
+            add_action('woocommerce_thankyou_' . $this->id, array($this, 'thank_you_page'));
         }
 
         /**
          * Initialise Gateway Settings Form Fields
          */
-        function init_form_fields() {
+        function init_form_fields()
+        {
             $this->form_fields = array(
                 'tnb_wallet_address' => array(
-                    'title' => __( 'Store Address', 'woocommerce' ),
+                    'title' => __('Store Address', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __( 'This is the address the user pays to.', 'woocommerce' ),
+                    'description' => __('This is the address the user pays to.', 'woocommerce'),
                     'desc_tip'      => true
                 ),
                 'tnb_rate' => array(
-                    'title' => __( 'Custom Rate', 'woocommerce' ),
+                    'title' => __('Custom Rate', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __( 'This is the custom rate (integer only).', 'woocommerce' ),
+                    'description' => __('This is the custom rate (integer only).', 'woocommerce'),
                     'desc_tip'      => true
                 )
             );
         }
 
-        
+
         /**
          * Process the payment.
          *
          * @param int $order_id  The order ID to update.
          */
-        function process_payment( $order_id ) {
+        function process_payment($order_id)
+        {
             global $woocommerce;
-            $order = new WC_Order( $order_id );
-        
-            if($order->get_meta('tnb_memo') == ''){
-                $order->update_meta_data('tnb_memo', base64_encode(rand(100000000,999999999)));
+            $order = new WC_Order($order_id);
+
+            if ($order->get_meta('tnb_memo') == '') {
+                $order->update_meta_data('tnb_memo', base64_encode(rand(100000000, 999999999)));
                 $order->save();
             }
 
             // Mark as on-hold (we're awaiting the cheque)
-            $order->update_status('pending-payment', __( 'Awaiting TNB payment', 'woocommerce' ));
-            
+            $order->update_status('pending-payment', __('Awaiting TNB payment', 'woocommerce'));
+
             // Remove cart
             $woocommerce->cart->empty_cart();
-            
-        
+
+
             // Return thankyou redirect
             return array(
                 'result' => 'success',
-                'redirect' => $this->get_return_url( $order )
+                'redirect' => $this->get_return_url($order)
             );
         }
 
-        
+
         /**
          * Output the payment information onto the thank you page.
          *
          * @param  int $order_id  The order ID.
          */
-        public function thank_you_page( $order_id )
+        public function thank_you_page($order_id)
         {
-            $order = wc_get_order( $order_id );
-            
-            if ( !$order->needs_payment() ) {
+            $order = wc_get_order($order_id);
+
+            if (!$order->needs_payment()) {
                 // $this->log( 'Order does not need payment' );
                 return;
             }
-            
-            
-            $rate = floatval($this->get_option( 'tnb_rate' ));
+
+
+            $rate = floatval($this->get_option('tnb_rate'));
             $meta = $order->get_meta('tnb_memo');
-            if('TNBC' === get_woocommerce_currency()){
+            if ('TNBC' === get_woocommerce_currency()) {
                 $price = $order->get_total();
-            }else{
+            } else {
                 $price = $order->get_total() / $rate;
             }
-            $store_address = $this->get_option( 'tnb_wallet_address' );
+            $store_address = $this->get_option('tnb_wallet_address');
 
-            require plugin_dir_path( __FILE__ ) . 'inc/success_modal.php';
-            
-            ?>
+            require plugin_dir_path(__FILE__) . 'inc/success_modal.php';
+
+?>
 
 
-            <script type="text/javascript" >
-            jQuery('#paymentVerify').click(function($) {
+            <script type="text/javascript">
+                jQuery('#paymentVerify').click(function($) {
 
-                var data = {
-                    'action': 'check_tnb_transaction',
-                    'order_id': window.location.pathname.split('/')[4]
-                };
+                    var data = {
+                        'action': 'check_tnb_transaction',
+                        'order_id': window.location.pathname.split('/')[4]
+                    };
 
-                // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-                jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
-                    if(response == 'true'){
-                        alert('Payment Made');
-                        location.reload();
-                    }else{
-                        alert('Payment not made yet please verify.');
-                    }
-                    console.log('Server:', response);
+                    // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+                    jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
+                        if (response == 'true') {
+                            alert('Payment Made');
+                            location.reload();
+                        } else {
+                            alert('Payment not made yet please verify.');
+                        }
+                        console.log('Server:', response);
+                    });
                 });
-            });
             </script>
 
             <script>
@@ -173,75 +179,75 @@ function tnbpay_init() {
                 // Update the count down every 1 second
                 var x = setInterval(function() {
 
-                // Get today's date and time
-                var now = new Date().getTime();
+                    // Get today's date and time
+                    var now = new Date().getTime();
 
-                // Find the distance between now and the count down date
-                var distance = countDownDate - now;
+                    // Find the distance between now and the count down date
+                    var distance = countDownDate - now;
 
-                // Time calculations for minutes and seconds
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    // Time calculations for minutes and seconds
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Display the result in the element with id="demo"
-                document.getElementById("tnb_timer").innerHTML = minutes + "m " + seconds + "s ";
+                    // Display the result in the element with id="demo"
+                    document.getElementById("tnb_timer").innerHTML = minutes + "m " + seconds + "s ";
 
-                // If the count down is finished, write some text
-                if (distance < 0) {
-                    clearInterval(x);
-                    alert('Failed to pay within time limit, order canceled');
-                    location.reload();
-                    document.getElementById("tnb_timer").innerHTML = "EXPIRED";
-                }
+                    // If the count down is finished, write some text
+                    if (distance < 0) {
+                        clearInterval(x);
+                        alert('Failed to pay within time limit, order canceled');
+                        location.reload();
+                        document.getElementById("tnb_timer").innerHTML = "EXPIRED";
+                    }
                 }, 1000);
             </script>
 
-            <?php
+<?php
         }
     }
 }
 add_action('plugins_loaded', 'tnbpay_init');
 
-add_action( 'wp_ajax_check_tnb_transaction', 'check_tnb_transaction' );
+add_action('wp_ajax_check_tnb_transaction', 'check_tnb_transaction');
 
-function check_tnb_transaction() {
-	global $wpdb; // this is how you get access to the database
+function check_tnb_transaction()
+{
+    global $wpdb; // this is how you get access to the database
 
-    $value = $wpdb->get_results( $wpdb->prepare(
+    $value = $wpdb->get_results($wpdb->prepare(
         " SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_tnbpay_settings' "
-    ) );
-    $serialized_data = (object)unserialize( $value[0]->option_value ); 
+    ));
+    $serialized_data = (object)unserialize($value[0]->option_value);
 
-    $order = wc_get_order( $_POST['order_id'] );
+    $order = wc_get_order($_POST['order_id']);
 
     $rate = floatval($serialized_data->tnb_rate);
     $meta = $order->get_meta('tnb_memo');
     $store_address = $serialized_data->tnb_wallet_address;
 
-    if('TNBC' === get_woocommerce_currency()){
+    if ('TNBC' === get_woocommerce_currency()) {
         $price = $order->get_total();
-    }else{
+    } else {
         $price = $order->get_total() / $rate;
     }
 
 
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL,"http://54.183.16.194/bank_transactions?limit=100");
+    curl_setopt($ch, CURLOPT_URL, "http://54.183.16.194/bank_transactions?limit=100");
     // Receive server response ...
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $server_output = curl_exec($ch);
 
-    curl_close ($ch);
-    
+    curl_close($ch);
+
     $data = json_decode($server_output, true);
 
     $response = $data['results'];
-    
+
     foreach ($response as $key => $value) {
-        if($value['memo'] == $meta && $value['amount'] == $price && $value['recipient'] == $store_address )
-        {
+        if ($value['memo'] == $meta && $value['amount'] == $price && $value['recipient'] == $store_address) {
             $order->set_status('completed');
             $order->save();
             echo ('true');
@@ -253,29 +259,34 @@ function check_tnb_transaction() {
     // $order->save();
     echo ('false');
 
-	wp_die(); // this is required to terminate immediately and return a proper response
+    wp_die(); // this is required to terminate immediately and return a proper response
 }
 
 
-function my_enqueue() {
-        wp_enqueue_style('bootstrap4', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css');
-        wp_enqueue_script( 'boot1','https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js', array( 'jquery' ),'',true );
-        wp_enqueue_script( 'boot2','https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js', array( 'jquery' ),'',true );
-        wp_enqueue_script( 'boot3','https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js', array( 'jquery' ),'',true );
+function my_enqueue()
+{
+    wp_enqueue_style('bootstrap4', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css');
+    wp_enqueue_script('boot1', 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js', array('jquery'), '', true);
+    wp_enqueue_script('boot2', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js', array('jquery'), '', true);
+    wp_enqueue_script('boot3', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js', array('jquery'), '', true);
 
-    wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
+    wp_enqueue_script('ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery'));
 
-    wp_localize_script( 'ajax-script', 'tnb_ajax_object',
-            array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+    wp_localize_script(
+        'ajax-script',
+        'tnb_ajax_object',
+        array('ajax_url' => admin_url('admin-ajax.php'))
+    );
 }
-add_action( 'wp_enqueue_scripts', 'my_enqueue' );
+add_action('wp_enqueue_scripts', 'my_enqueue');
 
-function add_your_gateway_class( $methods ) {
-    $methods[] = 'WC_Gateway_Your_Gateway'; 
+function add_your_gateway_class($methods)
+{
+    $methods[] = 'WC_Gateway_Your_Gateway';
     return $methods;
 }
 
-add_filter( 'woocommerce_payment_gateways', 'add_your_gateway_class' );
+add_filter('woocommerce_payment_gateways', 'add_your_gateway_class');
 
 
 /**
@@ -285,31 +296,35 @@ add_filter( 'woocommerce_payment_gateways', 'add_your_gateway_class' );
  *
  * @return array
  **/
-function tnbpay_plugin_action_links( $links ) {
+function tnbpay_plugin_action_links($links)
+{
 
-	$settings_link = array(
-		'settings' => '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=tnbpay' ) . '" title="' . __( 'View TNBPay WooCommerce Settings', 'woo-tnbpay' ) . '">' . __( 'Settings', 'woo-tnbpay' ) . '</a>',
-	);
+    $settings_link = array(
+        'settings' => '<a href="' . admin_url('admin.php?page=wc-settings&tab=checkout&section=tnbpay') . '" title="' . __('View TNBPay WooCommerce Settings', 'woo-tnbpay') . '">' . __('Settings', 'woo-tnbpay') . '</a>',
+    );
 
-	return array_merge( $settings_link, $links );
-
+    return array_merge($settings_link, $links);
 }
 
 /**
  * Custom currency and currency symbol
  */
-add_filter( 'woocommerce_currencies', 'add_my_currency' );
+add_filter('woocommerce_currencies', 'add_my_currency');
 
-function add_my_currency( $currencies ) {
-     $currencies['TNBC'] = __( 'Tnbc', 'woocommerce' );
-     return $currencies;
+function add_my_currency($currencies)
+{
+    $currencies['TNBC'] = __('Tnbc', 'woocommerce');
+    return $currencies;
 }
 
 add_filter('woocommerce_currency_symbol', 'add_my_currency_symbol', 10, 2);
 
-function add_my_currency_symbol( $currency_symbol, $currency ) {
-     switch( $currency ) {
-          case 'TNBC': $currency_symbol = 'TNB'; break;
-     }
-     return $currency_symbol;
+function add_my_currency_symbol($currency_symbol, $currency)
+{
+    switch ($currency) {
+        case 'TNBC':
+            $currency_symbol = 'TNB';
+            break;
+    }
+    return $currency_symbol;
 }
