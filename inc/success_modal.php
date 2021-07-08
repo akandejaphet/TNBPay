@@ -115,6 +115,13 @@
     border-color: #e31010;
 
   }
+  
+    .btn:focus {
+    background: #e31010;
+    border-radius: 100px;
+    border-color: #e31010;
+
+  }
 
   .modal-backdrop {
     display: none;
