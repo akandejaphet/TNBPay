@@ -129,11 +129,25 @@
       /* New width for default modal */
     }
   }
+
+  .tnb-loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(241 242 243 / 62%);
+    top: 0;
+    padding-top: 50%;
+    display: none;
+  }
+
+  .modal-dialog-tnb {
+    position: relative
+  }
 </style>
 
 <!-- Modal -->
 <div class="modal modal-tnb fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-tnb">
 
     <!-- Modal content-->
     <div class="modal-content">
@@ -176,6 +190,19 @@
         <button type="button" id="paymentVerify" class="btn btn-primary btn-lg">Payment Made, Next</button>
 
       </div>
+    </div>
+
+    <div class="tnb-loader" id="tnbLoader">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+        <circle cx="50" cy="50" r="0" fill="none" stroke="#1c4595" stroke-width="2">
+          <animate attributeName="r" repeatCount="indefinite" dur="1s" values="0;40" keyTimes="0;1" keySplines="0 0.2 0.8 1" calcMode="spline" begin="0s"></animate>
+          <animate attributeName="opacity" repeatCount="indefinite" dur="1s" values="1;0" keyTimes="0;1" keySplines="0.2 0 0.8 1" calcMode="spline" begin="0s"></animate>
+        </circle>
+        <circle cx="50" cy="50" r="0" fill="none" stroke="#e76a24" stroke-width="2">
+          <animate attributeName="r" repeatCount="indefinite" dur="1s" values="0;40" keyTimes="0;1" keySplines="0 0.2 0.8 1" calcMode="spline" begin="-0.5s"></animate>
+          <animate attributeName="opacity" repeatCount="indefinite" dur="1s" values="1;0" keyTimes="0;1" keySplines="0.2 0 0.8 1" calcMode="spline" begin="-0.5s"></animate>
+        </circle>
+      </svg>
     </div>
 
 
