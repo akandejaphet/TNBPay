@@ -110,6 +110,13 @@ background: #C80909;
 border-radius: 100px;
 border-color: #C80909;
 }
+	
+.btn:hover {
+background: #e31010;
+border-radius: 100px;
+border-color: #e31010;
+
+}
 
 .modal-backdrop{
   display: none;
