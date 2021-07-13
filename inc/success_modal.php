@@ -2,17 +2,19 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-  .modal-title {
+ .xtitle{
+ margin: 0;
+line-height: 1.42857143;
+font-family: Roboto;
+font-style: normal;
+font-weight: bold;
+color: #FFFFFF
+  
+}
 
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    color: #FFFFFF
-  }
-
-  .modal-header {
-    background-color: #C80909;
-  }
+.xheader {
+  background-color: #C80909 !important; 
+}
 
   .await {
     font-size: 14px;
@@ -24,7 +26,7 @@
 
   }
 
-  .d-flex {
+  .x-flex {
     text-align: center;
     padding-top: 10px;
   }
@@ -34,13 +36,14 @@
     font-style: normal;
     font-weight: 800;
     font-size: 20px;
-    line-height: 16px;
+    line-height: 14px;
   }
 
   .conv_rate {
-    font-family: Roboto;
+    font-family: Roboto;;
     font-style: normal;
     font-weight: normal;
+	font-size:16px;
   }
 
   .empty_space {}
@@ -49,18 +52,19 @@
     height: 10px;
   }
 
-  .modal-body {
+  .xbody {
     font-family: Roboto;
     font-style: normal;
+	font-size:16px;
     font-weight: normal;
-    background: rgba(0, 0, 0, 0.05);
-    padding-top: 12px;
+	background: rgba(0, 0, 0, 0.05) !important;
+    padding:2rem !important;
   }
+ 
 
   .payment_box {
     background: #FFFFFF;
-    display: flex;
-    flex-direction: column;
+   	gap:10px;
     padding-top: 10px;
     height: 210px;
     margin-top: 20px;
@@ -91,35 +95,35 @@
 
   }
 
-  .modal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .xfooter {
+    justify-content: center !important;
 
   }
 
-  .btn {
+  .xbtn {
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
+	font-size:16px;
+	padding: .5rem 2rem !important;
     text-align: center;
     text-transform: capitalize;
-    background: #C80909;
-    border-radius: 100px;
-    border-color: #C80909;
+    background: #C80909 !important;
+    border-radius: 100px !important;
+    border-color: #C80909 !important;
   }
 
-  .btn:hover {
-    background: #e31010;
-    border-radius: 100px;
-    border-color: #e31010;
+  .xbtn:hover {
+    background: #e31010 !important;
+    border-radius: 100px !important;
+    border-color: #e31010 !important;
 
   }
   
-    .btn:focus {
-    background: #e31010;
-    border-radius: 100px;
-    border-color: #e31010;
+    .xbtn:focus {
+    background: #e31010 !important;
+    border-radius: 100px !important;
+    border-color: #e31010 !important;
 
   }
 
@@ -154,14 +158,14 @@
 </style>
 
 <!-- Modal -->
-<div class="modal modal-tnb fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-tnb" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-tnb">
 
     <!-- Modal content-->
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header xheader">
         <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-        <h5 class="modal-title">TnbPay</h5>
+        <h3 class="modal-title xtitle">TnbPay</h3>
         <div class="await ">
           <div class="timer" id="tnb_timer"> </div>
         </div>
@@ -169,7 +173,7 @@
 
 
 
-      <div class="d-flex flex-column">
+      <div class="d-flex flex-column x-flex">
         <div class="p-2 conv_amt"><?php echo (esc_html($price)); ?> TNB</div>
         <!-- <div class = "p-2 empty_space">  </div> -->
         <div class="p-2 conv_rate">1TNB = $<?php echo (esc_html($rate)) ?></div>
@@ -177,10 +181,10 @@
 
       </div>
 
-      <div class="modal-body text-center">
-        Send the above amount to the account below using the memo as description
+      <div class="modal-body  text-center xbody" > 
+        Send the above amount to the account below using the memo as description 
 
-        <div class="payment_box d-flex flex-column">
+        <div class="payment_box d-flex flex-column x-flex">
 
           <div class="p-2 pay_det"> Account </div>
           <div class="p-2 pay_box "> <?php echo (esc_html($store_address)); ?></div>
@@ -194,8 +198,8 @@
 
 
       </div>
-      <div class="modal-footer">
-        <button type="button" id="paymentVerify" class="btn btn-primary btn-lg">Payment Made, Next</button>
+      <div class="modal-footer xfooter">
+        <button type="button" id="paymentVerify" class="btn btn-primary btn-lg xbtn">Payment Made, Next</button>
 
       </div>
     </div>
