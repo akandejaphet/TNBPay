@@ -4,10 +4,13 @@
 	<img src= "https://github.com/akandejaphet/TNBPay/blob/master/TNBPAY.jpg"> 
 </p>
  <p align="center"> 
-	<b> Accept TNBC Payment</b>
-	</p>
+	<b> Accept TNBC Payment on your store</b> <br>
+	 <a href="https://github.com/akandejaphet/TNBPay/blob/master/Documentation/demo.gif">View demo </a>
+</p>
 
+	
 TNBPAY is a free and open-source Woo-commerce plugin which allows you to accept TNBC without fees or intermediaries.
+
 
 ## Features
 
