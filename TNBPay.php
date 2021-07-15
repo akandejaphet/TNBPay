@@ -212,6 +212,7 @@ function tnbpay_init()
 add_action('plugins_loaded', 'tnbpay_init');
 
 add_action('wp_ajax_check_tnb_transaction', 'check_tnb_transaction');
+add_action('wp_ajax_nopriv_check_tnb_transaction', 'check_tnb_transaction');
 
 function check_tnb_transaction()
 {
