@@ -146,7 +146,7 @@ function tnbpay_init()
                 //Check if time is passed already and cancel order
                 $order->set_status('cancelled');
                 $order->save();
-                header("Refresh:0");
+                return;
             }
 
             if ('TNBC' === get_woocommerce_currency()) {

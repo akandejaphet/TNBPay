@@ -174,9 +174,9 @@ color: #FFFFFF
 
 
       <div class="d-flex flex-column x-flex">
-        <div class="p-2 conv_amt"><?php echo (esc_html($price)); ?> TNB</div>
+        <div class="p-2 conv_amt"><?php echo (esc_html($price)); ?> TNBC</div>
         <!-- <div class = "p-2 empty_space">  </div> -->
-        <div class="p-2 conv_rate">1TNB = $<?php echo (esc_html($rate)) ?></div>
+        <div class="p-2 conv_rate">1TNBC = $<?php echo (esc_html($rate)) ?></div>
         <div class="p-2 empty_space_2"> </div>
 
       </div>
