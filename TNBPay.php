@@ -154,6 +154,10 @@ function tnbpay_init()
             } else {
                 $price = $order->get_total() / $rate;
             }
+
+            if($order->get_meta('tnb_split_payment') != ''){
+                $price == $order->get_meta('tnb_split_payment') - $price;
+            }
             $store_address = $this->get_option('tnb_wallet_address');
 
             require plugin_dir_path(__FILE__) . 'inc/success_modal.php';
