@@ -100,7 +100,9 @@ function tnbpay_init()
             $order = new WC_Order($order_id);
 
             if ($order->get_meta('tnb_memo') == '') {
-                $order->update_meta_data('tnb_memo', base64_encode(rand(100000000, 999999999)));
+                $memo = base64_encode(rand(100000000, 999999999));
+                $order->update_meta_data('tnb_memo', $memo);
+                $order->add_order_note("Transaction memo added $memo");
                 $order->save();
             }
 
