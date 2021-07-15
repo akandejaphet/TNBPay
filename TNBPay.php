@@ -162,12 +162,16 @@ function tnbpay_init()
 
                     // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                     jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
-                        if (response == 'true') {
+                        if (response == 1) {
                             alert('Payment Made');
-                            location.reload();
-                        } else {
+                        }else if (response == 2) {
+                            alert('You over paid the store owner will refund you or reach out to them');
+                        }else if (response == 3) {
+                            alert('You underpaid, please pay the balance. You timer has been reset');
+                        }else {
                             alert('Payment not made yet please verify.');
                         }
+                            location.reload();
                         console.log('Server:', response);
                         document.getElementById("tnbLoader").style.display = "none";
                     });
