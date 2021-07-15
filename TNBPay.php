@@ -101,6 +101,7 @@ function tnbpay_init()
 
             if ($order->get_meta('tnb_memo') == '') {
                 $memo = base64_encode(rand(100000000, 999999999));
+                $order->update_meta_data('tnb_timer', strtotime('+5 minutes')*1000);
                 $order->update_meta_data('tnb_memo', $memo);
                 $order->add_order_note("Transaction memo added $memo");
                 $order->save();
@@ -138,6 +139,15 @@ function tnbpay_init()
 
             $rate = floatval($this->get_option('tnb_rate'));
             $meta = $order->get_meta('tnb_memo');
+            $timer = $order->get_meta('tnb_timer');
+
+
+            if($timer <= (strtotime("now")*1000)){
+                //Check if time is passed already and cancel order
+                $order->set_status('cancelled');
+                $order->save();
+            }
+
             if ('TNBC' === get_woocommerce_currency()) {
                 $price = $order->get_total();
             } else {
@@ -180,10 +190,7 @@ function tnbpay_init()
 
             <script>
                 // Set the date we're counting down to
-                var oldDateObj = new Date();
-                var countDownDate = new Date();
-                countDownDate.setTime(oldDateObj.getTime() + (30 * 60 * 1000));
-                var countDownDate = countDownDate.getTime();
+                var countDownDate = <?php echo $timer; ?>;
 
                 // Update the count down every 1 second
                 var x = setInterval(function() {
