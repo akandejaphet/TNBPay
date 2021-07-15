@@ -286,11 +286,13 @@ function check_tnb_transaction()
                         echo (1);
                         return;
                     }else{
-
+                        //Reset timer for split payment
+                        $order->update_meta_data('tnb_timer', strtotime('+5 minutes')*1000);
                         $order->update_meta_data('tnb_split_payment', $order->get_meta('tnb_split_payment')+$value['amount']);
                     }
                 }else{
                     //Initial split payment
+                    $order->update_meta_data('tnb_timer', strtotime('+5 minutes')*1000);
                     $order->update_meta_data('tnb_split_payment', $value['amount']);
                 }
                 // $order->set_status('completed');
