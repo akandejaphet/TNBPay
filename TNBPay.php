@@ -4,7 +4,7 @@
  * Plugin Name: TNBPay
  * Author: Akande Japhet
  * Author URI: https://github.com/akandejaphet/TNBPay
- * Version:0.1.0
+ * Version:1.0.1
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: tnbpay
@@ -253,17 +253,60 @@ function check_tnb_transaction()
     $response = $data['results'];
 
     foreach ($response as $key => $value) {
-        if ($value['memo'] == $meta && $value['amount'] == $price && $value['recipient'] == $store_address) {
-            $order->set_status('completed');
-            $order->save();
-            echo ('true');
+        if ($value['memo'] == $meta && $value['recipient'] == $store_address && $value['amount'] <=> $price && $value['amount'] > 0) {
+            //Figure out which memo to send
+            if($value['amount'] > $price){
+                //User overpaid
+                $order->add_order_note("User Overpaid: Please refund the user and amount of TNBC".($value['amount']-$price)." to this account number ".$value['block']['sender']);
+                $order->set_status('completed');
+                $order->save();
+                echo (2);
+                return;
+            }else if($value['amount'] < $price){
+                //User underpaid || Split payment
+                $order->add_order_note("User Underpaid: awaiting an additional payment of TNBC".($price-$value['amount'])." this account number was used: ".$value['block']['sender']);
+                if($order->get_meta('tnb_split_payment') != '')
+                {
+                    $remainingSlitPayment = $price-$order->get_meta('tnb_split_payment');
+                    if($order->get_meta('tnb_split_payment') == $remainingSlitPayment){
+                        $order->add_order_note("Completed purchase with account number ".$value['block']['sender']);
+                        $order->set_status('completed');
+                        $order->save();
+                        echo (1);
+                        return;
+                    }else{
+
+                        $order->update_meta_data('tnb_split_payment', $order->get_meta('tnb_split_payment')+$value['amount']);
+                    }
+                }else{
+                    //Initial split payment
+                    $order->update_meta_data('tnb_split_payment', $value['amount']);
+                }
+                // $order->set_status('completed');
+                $order->save();
+                echo (3);
+                return;
+            }else if($value['amount'] == $price){
+                //User overpaid
+                $order->add_order_note("Completed purchase with account number ".$value['block']['sender']);
+                $order->set_status('completed');
+                $order->save();
+                echo (1);
+                return;
+            }
+            echo (0);
             wp_die();
+            return;
+        }else if($value['memo'] == $meta && $value['recipient'] == $store_address){
+            //end the check quicker if amount is null
+            echo (0);
             return;
         }
     }
     // $order->set_status('canceled');
     // $order->save();
-    echo ('false');
+    echo (0);
+    return;
 
     wp_die(); // this is required to terminate immediately and return a proper response
 }
@@ -329,7 +372,7 @@ function add_my_currency_symbol($currency_symbol, $currency)
 {
     switch ($currency) {
         case 'TNBC':
-            $currency_symbol = 'TNB';
+            $currency_symbol = 'TNBC';
             break;
     }
     return $currency_symbol;
