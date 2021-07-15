@@ -175,14 +175,16 @@ function tnbpay_init()
                     jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
                         if (response == 1) {
                             alert('Payment Made');
+                            location.reload();
                         }else if (response == 2) {
                             alert('You over paid the store owner will refund you or reach out to them');
+                            location.reload();
                         }else if (response == 3) {
                             alert('You underpaid, please pay the balance. You timer has been reset');
+                            location.reload();
                         }else {
                             alert('Payment not made yet please verify.');
                         }
-                            location.reload();
                         console.log('Server:', response);
                         document.getElementById("tnbLoader").style.display = "none";
                     });
