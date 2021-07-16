@@ -1,6 +1,82 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<script>
+//Script for Clipboard
+  function copyClipboard() {
+    $('#copy-button').tooltip();
+  var elm = document.getElementById('copy-input');
+if(window.getSelection) {
+    // other browsers
+
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(elm);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("Copy");
+    try {
+      var success = document.execCommand('copy');
+      if (success) {
+        $('#copy-button').trigger('copied', ['Copied!']);
+      } else {
+        $('#copy-button').trigger('copied', ['Copy with Ctrl-c']);
+      }
+    } catch (err) {
+      $('#copy-button').trigger('copied', ['Copy with Ctrl-c']);
+    }
+
+    // Handler for updating the tooltip message.
+  $('#copy-button').bind('copied', function(event, message) {
+    $(this).attr('title', message)
+        .tooltip('_fixTitle')
+        .tooltip('show')
+        .attr('title', "Copy")
+        .tooltip('_fixTitle');
+  });
+  
+  }
+}
+	
+	
+ function copyClipboard1() {
+    $('#copy-button1').tooltip();
+  var elm = document.getElementById('copy-input1');
+if(window.getSelection) {
+    // other browsers
+
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(elm);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("Copy");
+    try {
+      var success = document.execCommand('copy');
+      if (success) {
+        $('#copy-button1').trigger('copied', ['Copied!']);
+      } else {
+        $('#copy-button1').trigger('copied', ['Copy with Ctrl-c']);
+      }
+    } catch (err) {
+      $('#copy-button1').trigger('copied', ['Copy with Ctrl-c']);
+    }
+
+    // Handler for updating the tooltip message.
+  $('#copy-button1').bind('copied', function(event, message) {
+    $(this).attr('title', message)
+        .tooltip('_fixTitle')
+        .tooltip('show')
+        .attr('title', "Copy")
+        .tooltip('_fixTitle');
+  });
+  
+  }
+}
+</script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+	@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
 
  .xtitle{
  margin: 0;
@@ -87,13 +163,14 @@ color: #FFFFFF
     background: rgba(0, 0, 0, 0.05);
     height: 40px;
     width: 90%;
-    margin: auto;
+   
+  }
+	.pay_box2 {  margin: auto;
     text-align: center;
     font-size: 14px;
     white-space: nowrap;
-    overflow: hidden;
-
-  }
+		overflow: hidden;align-content
+	}
 
   .xfooter {
     justify-content: center !important;
@@ -155,7 +232,19 @@ color: #FFFFFF
   .modal-dialog-tnb {
     position: relative
   }
+	
+	.xbtn_copy {
+  border: none;  
+background-color:transparent !important;
+  padding:0px !important;
+  }
+
+.xbtn_copy:hover {
+color: #C80909;
+	background-color:transparent !important;
+	}
 </style>
+
 
 <!-- Modal -->
 <div class="modal modal-tnb" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -187,10 +276,14 @@ color: #FFFFFF
         <div class="payment_box d-flex flex-column x-flex">
 
           <div class="p-2 pay_det"> Account </div>
-          <div class="p-2 pay_box "> <?php echo (esc_html($store_address)); ?></div>
+			
+          <div class="p-2 pay_box d-flex flex-row ">
+			  
+			  <div class="pay_box2 " id ="copy-input" > <?php echo (esc_html($store_address)); ?> </div><button type="button" id="copy-button" onclick="copyClipboard()" class="btn-clipboard xbtn_copy" data-toggle="tooltip"  data-placement="bottom" title="Copy" > <i class="bi bi-clipboard fa-lg"></i> </button></div>
 
           <div class="p-2 pay_det"> Memo </div>
-          <div class="p-2 pay_box"> <?php echo (esc_html($meta)); ?> </div>
+			  <div class="p-2 pay_box d-flex flex-row ">
+          <div class="pay_box2" id ="copy-input1"> <?php echo (esc_html($meta)); ?> </div><button type="button" id="copy-button1" onclick="copyClipboard1()" class="btn-clipboard xbtn_copy" data-toggle="tooltip"  data-placement="bottom" title="Copy" > <i class="bi bi-clipboard fa-lg"></i> </button></div>
 
 
 
