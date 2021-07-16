@@ -279,7 +279,7 @@ function check_tnb_transaction()
                 $order->set_status('completed');
                 $order->save();
                 echo (2);
-                return;
+                wp_die();
             }else if($value['amount'] < $price){
                 //User underpaid || Split payment
                 $order->add_order_note("User Underpaid: awaiting an additional payment of TNBC".($price-$value['amount'])." this account number was used: ".$value['block']['sender']);
@@ -291,7 +291,7 @@ function check_tnb_transaction()
                         $order->set_status('completed');
                         $order->save();
                         echo (1);
-                        return;
+                        wp_die();
                     }else{
                         //Reset timer for split payment
                         $order->update_meta_data('tnb_timer', strtotime('+5 minutes')*1000);
@@ -305,28 +305,26 @@ function check_tnb_transaction()
                 // $order->set_status('completed');
                 $order->save();
                 echo (3);
-                return;
+                wp_die();
             }else if($value['amount'] == $price){
                 //User overpaid
                 $order->add_order_note("Completed purchase with account number ".$value['block']['sender']);
                 $order->set_status('completed');
                 $order->save();
                 echo (1);
-                return;
+                wp_die();
             }
             echo (0);
             wp_die();
-            return;
         }else if($value['memo'] == $meta && $value['recipient'] == $store_address){
             //end the check quicker if amount is null
             echo (0);
-            return;
+            wp_die();
         }
     }
     // $order->set_status('canceled');
     // $order->save();
     echo (0);
-    return;
 
     wp_die(); // this is required to terminate immediately and return a proper response
 }
