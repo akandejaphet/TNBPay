@@ -101,7 +101,7 @@ function tnbpay_init()
 
             if ($order->get_meta('tnb_memo') == '') {
                 $memo = base64_encode(rand(100000000, 999999999));
-                $order->update_meta_data('tnb_timer', strtotime('+5 minutes')*1000);
+                $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
                 $order->update_meta_data('tnb_memo', $memo);
                 $order->add_order_note("Transaction memo added $memo");
                 $order->save();
@@ -294,12 +294,12 @@ function check_tnb_transaction()
                         wp_die();
                     }else{
                         //Reset timer for split payment
-                        $order->update_meta_data('tnb_timer', strtotime('+5 minutes')*1000);
+                        $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
                         $order->update_meta_data('tnb_split_payment', $order->get_meta('tnb_split_payment')+$value['amount']);
                     }
                 }else{
                     //Initial split payment
-                    $order->update_meta_data('tnb_timer', strtotime('+5 minutes')*1000);
+                    $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
                     $order->update_meta_data('tnb_split_payment', $value['amount']);
                 }
                 // $order->set_status('completed');
