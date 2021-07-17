@@ -156,7 +156,7 @@ function tnbpay_init()
             }
 
             if($order->get_meta('tnb_split_payment') != ''){
-                $price == $price - $order->get_meta('tnb_split_payment');
+                $price = $price - $order->get_meta('tnb_split_payment');
             }
             $store_address = $this->get_option('tnb_wallet_address');
 
@@ -256,7 +256,7 @@ function check_tnb_transaction()
     }
 
     if($order->get_meta('tnb_split_payment') != ''){
-        $price == $price - $order->get_meta('tnb_split_payment');
+        $price = $price - $order->get_meta('tnb_split_payment');
     }
 
 
