@@ -275,7 +275,7 @@ function check_tnb_transaction()
     $response = $data['results'];
 
     foreach ($response as $key => $value) {
-        if ($value['memo'] == $meta && $value['recipient'] == $store_address && $value['amount'] <=> $price && $value['amount'] > 0 &&  $value['block']['id'] != $order->get_meta('tnb_split_payment_id')) {
+        if ($value['memo'] == $meta && $value['recipient'] == $store_address && $value['amount'] > 0 &&  $value['block']['id'] != $order->get_meta('tnb_split_payment_id')) {
             //Figure out which memo to send
             if($value['amount'] > $price){
                 //User overpaid
