@@ -255,6 +255,10 @@ function check_tnb_transaction()
         $price = $order->get_total() / $rate;
     }
 
+    if($order->get_meta('tnb_split_payment') != ''){
+        $price == $price - $order->get_meta('tnb_split_payment');
+    }
+
 
     $ch = curl_init();
 
@@ -271,7 +275,7 @@ function check_tnb_transaction()
     $response = $data['results'];
 
     foreach ($response as $key => $value) {
-        if ($value['memo'] == $meta && $value['recipient'] == $store_address && $value['amount'] <=> $price && $value['amount'] > 0) {
+        if ($value['memo'] == $meta && $value['recipient'] == $store_address && $value['amount'] <=> $price && $value['amount'] > 0 &&  $value['block']['id'] != $order->get_meta('tnb_split_payment_id')) {
             //Figure out which memo to send
             if($value['amount'] > $price){
                 //User overpaid
@@ -283,26 +287,14 @@ function check_tnb_transaction()
             }else if($value['amount'] < $price){
                 //User underpaid || Split payment
                 $order->add_order_note("User Underpaid: awaiting an additional payment of TNBC".($price-$value['amount'])." this account number was used: ".$value['block']['sender']);
-                if($order->get_meta('tnb_split_payment') != '')
-                {
-                    $remainingSlitPayment = $price-$order->get_meta('tnb_split_payment');
-                    if($order->get_meta('tnb_split_payment') == $remainingSlitPayment){
-                        $order->add_order_note("Completed purchase with account number ".$value['block']['sender']);
-                        $order->set_status('completed');
-                        $order->save();
-                        echo (1);
-                        wp_die();
-                    }else{
-                        //Reset timer for split payment
-                        $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
-                        $order->update_meta_data('tnb_split_payment', $order->get_meta('tnb_split_payment')+$value['amount']);
-                    }
+                //Initial split payment
+                $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
+                if($order->get_meta('tnb_split_payment') != ''){
+                    $price == $value['amount'] - $order->get_meta('tnb_split_payment');
                 }else{
-                    //Initial split payment
-                    $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
                     $order->update_meta_data('tnb_split_payment', $value['amount']);
                 }
-                // $order->set_status('completed');
+                $order->update_meta_data('tnb_split_payment_id', $value['block']['id']);
                 $order->save();
                 echo (3);
                 wp_die();
