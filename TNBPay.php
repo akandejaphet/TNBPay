@@ -248,7 +248,7 @@ function check_tnb_transaction()
     ));
     $serialized_data = (object)unserialize($value[0]->option_value);
 
-    if (! $_POST['order_id']) {
+    if (!$_POST['order_id']) {
         echo (0);
         wp_die();
     }
