@@ -142,7 +142,7 @@ color: #FFFFFF
     background: #FFFFFF;
    	gap:10px;
     padding-top: 10px;
-    height: 210px;
+    height: 260px;
     margin-top: 20px;
   }
 
@@ -163,13 +163,17 @@ color: #FFFFFF
     background: rgba(0, 0, 0, 0.05);
     height: 40px;
     width: 90%;
-   
-  }
+     }
+	
+	.pay_box_acct{
+       height: 70px !important;
+   	}
+	
 	.pay_box2 {  margin: auto;
     text-align: center;
     font-size: 14px;
-    white-space: nowrap;
-		overflow: hidden;align-content
+    overflow-x: hidden;
+	align-content
 	}
 
   .xfooter {
@@ -277,7 +281,7 @@ color: #C80909;
 
           <div class="p-2 pay_det"> Account </div>
 			
-          <div class="p-2 pay_box d-flex flex-row ">
+          <div class="p-2 pay_box pay_box_acct d-flex flex-row ">
 			  
 			  <div class="pay_box2 " id ="copy-input" > <?php echo (esc_html($store_address)); ?> </div><button type="button" id="copy-button" onclick="copyClipboard()" class="btn-clipboard xbtn_copy" data-toggle="tooltip"  data-placement="bottom" title="Copy" > <i class="bi bi-clipboard fa-lg"></i> </button></div>
 
