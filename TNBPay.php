@@ -101,7 +101,7 @@ function tnbpay_init()
 
             if ($order->get_meta('tnb_memo') == '') {
                 $memo = base64_encode(rand(100000000, 999999999));
-                $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
+                $order->update_meta_data('tnb_timer', strtotime('+10 minutes') * 1000);
                 $order->update_meta_data('tnb_memo', $memo);
                 $order->add_order_note("Transaction memo added $memo");
                 $order->save();
@@ -142,7 +142,7 @@ function tnbpay_init()
             $timer = $order->get_meta('tnb_timer');
 
 
-            if($timer <= (strtotime("now")*1000)){
+            if ($timer <= (strtotime("now") * 1000)) {
                 //Check if time is passed already and cancel order
                 $order->set_status('cancelled');
                 $order->save();
@@ -155,7 +155,7 @@ function tnbpay_init()
                 $price = $order->get_total() / $rate;
             }
 
-            if($order->get_meta('tnb_split_payment') != ''){
+            if ($order->get_meta('tnb_split_payment') != '') {
                 $price = $price - $order->get_meta('tnb_split_payment');
             }
             $store_address = $this->get_option('tnb_wallet_address');
@@ -168,9 +168,15 @@ function tnbpay_init()
             <script type="text/javascript">
                 jQuery('#paymentVerify').click(function($) {
 
+                    var pathnames = window.location.pathname.split('/');
+                    var path = 0;
+                    jQuery(pathnames).each(function(index) {
+                        if (this == 'order-received') path = pathnames[index + 1];
+                    })
+
                     var data = {
                         'action': 'check_tnb_transaction',
-                        'order_id': window.location.pathname.split('/')[4]
+                        'order_id': path
                     };
 
                     document.getElementById("tnbLoader").style.display = "block";
@@ -180,16 +186,15 @@ function tnbpay_init()
                         if (response == 1) {
                             alert('Payment Made');
                             location.reload();
-                        }else if (response == 2) {
+                        } else if (response == 2) {
                             alert('You over paid the store owner will refund you or reach out to them');
                             location.reload();
-                        }else if (response == 3) {
+                        } else if (response == 3) {
                             alert('You underpaid, please pay the balance. You timer has been reset');
                             location.reload();
-                        }else {
+                        } else {
                             alert('Payment not made yet please verify.');
                         }
-                        console.log('Server:', response);
                         document.getElementById("tnbLoader").style.display = "none";
                     });
                 });
@@ -243,6 +248,11 @@ function check_tnb_transaction()
     ));
     $serialized_data = (object)unserialize($value[0]->option_value);
 
+    if (!$_POST['order_id']) {
+        echo (0);
+        wp_die();
+    }
+
     $order = wc_get_order($_POST['order_id']);
 
     $rate = floatval($serialized_data->tnb_rate);
@@ -255,7 +265,7 @@ function check_tnb_transaction()
         $price = $order->get_total() / $rate;
     }
 
-    if($order->get_meta('tnb_split_payment') != ''){
+    if ($order->get_meta('tnb_split_payment') != '') {
         $price = $price - $order->get_meta('tnb_split_payment');
     }
 
@@ -277,30 +287,30 @@ function check_tnb_transaction()
     foreach ($response as $key => $value) {
         if ($value['memo'] == $meta && $value['recipient'] == $store_address && $value['amount'] > 0 &&  $value['block']['id'] != $order->get_meta('tnb_split_payment_id')) {
             //Figure out which memo to send
-            if($value['amount'] > $price){
+            if ($value['amount'] > $price) {
                 //User overpaid
-                $order->add_order_note("User Overpaid: Please refund the user and amount of TNBC".($value['amount']-$price)." to this account number ".$value['block']['sender']);
+                $order->add_order_note("User Overpaid: Please refund the user and amount of TNBC" . ($value['amount'] - $price) . " to this account number " . $value['block']['sender']);
                 $order->set_status('completed');
                 $order->save();
                 echo (2);
                 wp_die();
-            }else if($value['amount'] < $price){
+            } else if ($value['amount'] < $price) {
                 //User underpaid || Split payment
-                $order->add_order_note("User Underpaid: awaiting an additional payment of TNBC".($price-$value['amount'])." this account number was used: ".$value['block']['sender']);
+                $order->add_order_note("User Underpaid: awaiting an additional payment of TNBC" . ($price - $value['amount']) . " this account number was used: " . $value['block']['sender']);
                 //Initial split payment
-                $order->update_meta_data('tnb_timer', strtotime('+10 minutes')*1000);
-                if($order->get_meta('tnb_split_payment') != ''){
+                $order->update_meta_data('tnb_timer', strtotime('+10 minutes') * 1000);
+                if ($order->get_meta('tnb_split_payment') != '') {
                     $price == $value['amount'] - $order->get_meta('tnb_split_payment');
-                }else{
+                } else {
                     $order->update_meta_data('tnb_split_payment', $value['amount']);
                 }
                 $order->update_meta_data('tnb_split_payment_id', $value['block']['id']);
                 $order->save();
                 echo (3);
                 wp_die();
-            }else if($value['amount'] == $price){
+            } else if ($value['amount'] == $price) {
                 //User overpaid
-                $order->add_order_note("Completed purchase with account number ".$value['block']['sender']);
+                $order->add_order_note("Completed purchase with account number " . $value['block']['sender']);
                 $order->set_status('completed');
                 $order->save();
                 echo (1);
@@ -308,7 +318,7 @@ function check_tnb_transaction()
             }
             echo (0);
             wp_die();
-        }else if($value['memo'] == $meta && $value['recipient'] == $store_address){
+        } else if ($value['memo'] == $meta && $value['recipient'] == $store_address) {
             //end the check quicker if amount is null
             echo (0);
             wp_die();
