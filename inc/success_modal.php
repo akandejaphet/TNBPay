@@ -114,6 +114,12 @@ color: #FFFFFF
     font-size: 20px;
     line-height: 14px;
   }
+  .conv_amt_original {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 10px;
+  }
 
   .conv_rate {
     font-family: Roboto;;
@@ -263,6 +269,7 @@ color: #C80909;
 
 
       <div class="d-flex flex-column x-flex">
+        <div class="p-2 conv_amt_original"><?php echo (esc_html(isset($original) ? $original.'TNBC' : '')); ?></div>
         <div class="p-2 conv_amt"><?php echo (esc_html($price)); ?> TNBC</div>
         <!-- <div class = "p-2 empty_space">  </div> -->
         <div class="p-2 conv_rate">1TNBC = $<?php echo (esc_html($rate)) ?></div>

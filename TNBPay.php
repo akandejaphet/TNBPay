@@ -156,6 +156,7 @@ function tnbpay_init()
             }
 
             if ($order->get_meta('tnb_split_payment') != '') {
+                $original = $price;
                 $price = $price - $order->get_meta('tnb_split_payment');
             }
             $store_address = $this->get_option('tnb_wallet_address');
@@ -187,7 +188,7 @@ function tnbpay_init()
                             alert('Payment Made');
                             location.reload();
                         } else if (response == 2) {
-                            alert('You over paid the store owner will refund you or reach out to them');
+                            alert('You over paid. Please reach out to the store owner to discuss the return of the extra coins');
                             location.reload();
                         } else if (response == 3) {
                             alert('You underpaid, please pay the balance. You timer has been reset');
@@ -289,7 +290,7 @@ function check_tnb_transaction()
             //Figure out which memo to send
             if ($value['amount'] > $price) {
                 //User overpaid
-                $order->add_order_note("User Overpaid: Please refund the user and amount of TNBC" . ($value['amount'] - $price) . " to this account number " . $value['block']['sender']);
+                $order->add_order_note("User Overpaid " . ($value['amount'] - $price) . " TNBC. Please discuss the overpayment with the customer or refund them at " . $value['block']['sender']);
                 $order->set_status('completed');
                 $order->save();
                 echo (2);
