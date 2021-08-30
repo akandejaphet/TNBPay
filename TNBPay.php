@@ -398,3 +398,12 @@ function add_my_currency_symbol($currency_symbol, $currency)
     }
     return $currency_symbol;
 }
+
+//Testing shortcodes
+add_shortcode('tnbpay', 'tnbpay_shortcode');
+function tnbpay_shortcode($atts = [], $content = null)
+{
+    $content = 'dummy text';
+    // always return
+    return $content;
+}
