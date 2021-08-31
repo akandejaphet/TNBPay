@@ -401,7 +401,7 @@ function add_my_currency_symbol($currency_symbol, $currency)
 add_shortcode('tnbpay', 'tnbpay_shortcode');
 function tnbpay_shortcode($atts = [], $content = null)
 {
-    $content = 'dummy text';
-    // always return
+    $content = '<img src="' . plugin_dir_url(dirname(__FILE__)) . 'TNBPay/images/tnbpay.jpg" width="185" height="30" onlick="console.log(2)" />';
+    
     return $content;
 }
