@@ -399,9 +399,20 @@ function add_my_currency_symbol($currency_symbol, $currency)
 
 //Testing shortcodes
 add_shortcode('tnbpay', 'tnbpay_shortcode');
-function tnbpay_shortcode($atts = [], $content = null)
+
+function tnbpay_shortcode($atts = [], $content = null, $tag='')
 {
+    // normalize attribute keys, lowercase
+    $atts = array_change_key_case( (array) $atts, CASE_LOWER );
+ 
+    // override default attributes with user attributes
+    $wporg_atts = shortcode_atts(
+        array(
+            'title' => 'TNBPay',
+        ), $atts, $tag
+    );
+
     $content = '<img src="' . plugin_dir_url(dirname(__FILE__)) . 'TNBPay/images/tnbpay.jpg" width="185" height="30" onlick="console.log(2)" />';
-    
+
     return $content;
 }
