@@ -57,8 +57,6 @@ function tnbpay_init()
             $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
             $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
 
-            define("GREETING", "Welcome to W3Schools.com!");
-
             // Save settings in admin if you have any defined
             $this->description = $this->method_description;
             add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
