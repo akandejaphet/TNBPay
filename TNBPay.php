@@ -400,19 +400,32 @@ function add_my_currency_symbol($currency_symbol, $currency)
 //Testing shortcodes
 add_shortcode('tnbpay', 'tnbpay_shortcode');
 
-function tnbpay_shortcode($atts = [], $content = null, $tag='')
+function tnbpay_shortcode($atts = [], $content = null, $tag = '')
 {
     // normalize attribute keys, lowercase
-    $atts = array_change_key_case( (array) $atts, CASE_LOWER );
- 
+    $atts = array_change_key_case((array) $atts, CASE_LOWER);
+
     // override default attributes with user attributes
     $wporg_atts = shortcode_atts(
         array(
             'title' => 'TNBPay',
-        ), $atts, $tag
+        ),
+        $atts,
+        $tag
     );
 
-    $content = '<img src="' . plugin_dir_url(dirname(__FILE__)) . 'TNBPay/images/tnbpay.jpg" width="185" height="30" onlick="console.log(2)" />';
+    $price = 40;
+
+    $meta = "mee ";
+
+    $rate = 10;
+
+    $store_address = "57c6214514343876fefaa1a94655b0d096388eb25d75af52ff4ed04ab1548e1d";
+
+
+    $content = '<div onClick="tnbpayShortcodePopup()"> <img src="' . plugin_dir_url(dirname(__FILE__)) . 'TNBPay/images/tnbpay.jpg" width="185" height="30" /> </div>';
+
+    $content .= require plugin_dir_path(__FILE__) . 'inc/shortcode_modal.php';
 
     return $content;
 }
