@@ -402,26 +402,18 @@ add_shortcode('tnbpay', 'tnbpay_shortcode');
 
 function tnbpay_shortcode($atts = [], $content = null, $tag = '')
 {
-    // normalize attribute keys, lowercase
-    $atts = array_change_key_case((array) $atts, CASE_LOWER);
+    $price = intval($atts['price']);
+    
+    $rate = intval($atts['rate']);
 
-    // override default attributes with user attributes
-    $wporg_atts = shortcode_atts(
-        array(
-            'title' => 'TNBPay',
-        ),
-        $atts,
-        $tag
-    );
+    $rate = isset($rate) ? $rate : 10;
 
-    $price = 40;
+    $meta = $atts['meta'];
 
-    $meta = "mee ";
+    $store_address = $atts['address'];
 
-    $rate = 10;
-
-    $store_address = "57c6214514343876fefaa1a94655b0d096388eb25d75af52ff4ed04ab1548e1d";
-
+    if(!isset($price) || !isset($meta) || !isset($address))
+        return "Store [address] or [price] or [meta] not set!" ;
 
     $content = '<div onClick="tnbpayShortcodePopup()"> <img src="' . plugin_dir_url(dirname(__FILE__)) . 'TNBPay/images/tnbpay.jpg" width="185" height="30" /> </div>';
 
