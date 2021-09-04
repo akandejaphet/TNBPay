@@ -412,7 +412,7 @@ function tnbpay_shortcode($atts = [], $content = null, $tag = '')
 
     $store_address = $atts['address'];
 
-    if(!isset($price) || !isset($meta) || !isset($address))
+    if(!isset($price) || !isset($meta) || !isset($store_address))
         return "Store [address] or [price] or [meta] not set!" ;
 
     $content = '<div onClick="tnbpayShortcodePopup()"> <img src="' . plugin_dir_url(dirname(__FILE__)) . 'TNBPay/images/tnbpay.jpg" width="185" height="30" /> </div>';
