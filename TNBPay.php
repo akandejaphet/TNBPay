@@ -467,7 +467,7 @@ function tnbpay_shortcode($atts = [], $content = null, $tag = '')
 
     $rate = isset($rate) ? $rate : 10;
 
-    $memo = $atts['memo'];
+    $memo = 'shortcode-'.base64_encode(rand(100000000, 999999999));
 
     $value = $wpdb->get_results(
         " SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_tnbpay_settings' "
