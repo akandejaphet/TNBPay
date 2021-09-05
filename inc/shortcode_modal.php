@@ -350,18 +350,13 @@
     };
 
     document.getElementById("tnbLoader").style.display = "block";
-
+    
     // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
     jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
       if (response == 1) {
         alert('Payment Made');
-        location.reload();
-      } else if (response == 2) {
-        alert('You over paid. Please reach out to the store owner to discuss the return of the extra coins');
-        location.reload();
-      } else if (response == 3) {
-        alert('You underpaid, please pay the balance. You timer has been reset');
-        location.reload();
+        // location.reload();
+        document.getElementById(`<?php echo (esc_html($submitButton)); ?>`).style.display = "block";
       } else {
         alert('Payment not made yet please verify.');
       }
