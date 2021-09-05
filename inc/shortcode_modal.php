@@ -1,96 +1,95 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <script>
-//Script for Clipboard
+  //Script for Clipboard
   function copyClipboard() {
     $('#copy-button').tooltip();
-  var elm = document.getElementById('copy-input');
-if(window.getSelection) {
-    // other browsers
+    var elm = document.getElementById('copy-input');
+    if (window.getSelection) {
+      // other browsers
 
-    var selection = window.getSelection();
-    var range = document.createRange();
-    range.selectNodeContents(elm);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand("Copy");
-    try {
-      var success = document.execCommand('copy');
-      if (success) {
-        $('#copy-button').trigger('copied', ['Copied!']);
-      } else {
+      var selection = window.getSelection();
+      var range = document.createRange();
+      range.selectNodeContents(elm);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand("Copy");
+      try {
+        var success = document.execCommand('copy');
+        if (success) {
+          $('#copy-button').trigger('copied', ['Copied!']);
+        } else {
+          $('#copy-button').trigger('copied', ['Copy with Ctrl-c']);
+        }
+      } catch (err) {
         $('#copy-button').trigger('copied', ['Copy with Ctrl-c']);
       }
-    } catch (err) {
-      $('#copy-button').trigger('copied', ['Copy with Ctrl-c']);
+
+      // Handler for updating the tooltip message.
+      $('#copy-button').bind('copied', function(event, message) {
+        $(this).attr('title', message)
+          .tooltip('_fixTitle')
+          .tooltip('show')
+          .attr('title', "Copy")
+          .tooltip('_fixTitle');
+      });
+
     }
-
-    // Handler for updating the tooltip message.
-  $('#copy-button').bind('copied', function(event, message) {
-    $(this).attr('title', message)
-        .tooltip('_fixTitle')
-        .tooltip('show')
-        .attr('title', "Copy")
-        .tooltip('_fixTitle');
-  });
-  
   }
-}
-	
-	
- function copyClipboard1() {
-    $('#copy-button1').tooltip();
-  var elm = document.getElementById('copy-input1');
-if(window.getSelection) {
-    // other browsers
 
-    var selection = window.getSelection();
-    var range = document.createRange();
-    range.selectNodeContents(elm);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand("Copy");
-    try {
-      var success = document.execCommand('copy');
-      if (success) {
-        $('#copy-button1').trigger('copied', ['Copied!']);
-      } else {
+
+  function copyClipboard1() {
+    $('#copy-button1').tooltip();
+    var elm = document.getElementById('copy-input1');
+    if (window.getSelection) {
+      // other browsers
+
+      var selection = window.getSelection();
+      var range = document.createRange();
+      range.selectNodeContents(elm);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand("Copy");
+      try {
+        var success = document.execCommand('copy');
+        if (success) {
+          $('#copy-button1').trigger('copied', ['Copied!']);
+        } else {
+          $('#copy-button1').trigger('copied', ['Copy with Ctrl-c']);
+        }
+      } catch (err) {
         $('#copy-button1').trigger('copied', ['Copy with Ctrl-c']);
       }
-    } catch (err) {
-      $('#copy-button1').trigger('copied', ['Copy with Ctrl-c']);
-    }
 
-    // Handler for updating the tooltip message.
-  $('#copy-button1').bind('copied', function(event, message) {
-    $(this).attr('title', message)
-        .tooltip('_fixTitle')
-        .tooltip('show')
-        .attr('title', "Copy")
-        .tooltip('_fixTitle');
-  });
-  
+      // Handler for updating the tooltip message.
+      $('#copy-button1').bind('copied', function(event, message) {
+        $(this).attr('title', message)
+          .tooltip('_fixTitle')
+          .tooltip('show')
+          .attr('title', "Copy")
+          .tooltip('_fixTitle');
+      });
+
+    }
   }
-}
 </script>
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-	@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
+  @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
 
- .xtitle{
- margin: 0;
-line-height: 1.42857143;
-font-family: Roboto;
-font-style: normal;
-font-weight: bold;
-color: #FFFFFF
-  
-}
+  .xtitle {
+    margin: 0;
+    line-height: 1.42857143;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    color: #FFFFFF
+  }
 
-.xheader {
-  background-color: #C80909 !important; 
-}
+  .xheader {
+    background-color: #C80909 !important;
+  }
 
   .await {
     font-size: 14px;
@@ -114,6 +113,7 @@ color: #FFFFFF
     font-size: 20px;
     line-height: 14px;
   }
+
   .conv_amt_original {
     font-family: Roboto;
     font-style: normal;
@@ -122,10 +122,11 @@ color: #FFFFFF
   }
 
   .conv_rate {
-    font-family: Roboto;;
+    font-family: Roboto;
+    ;
     font-style: normal;
     font-weight: normal;
-	font-size:16px;
+    font-size: 16px;
   }
 
   .empty_space {}
@@ -137,16 +138,16 @@ color: #FFFFFF
   .xbody {
     font-family: Roboto;
     font-style: normal;
-	font-size:16px;
+    font-size: 16px;
     font-weight: normal;
-	background: rgba(0, 0, 0, 0.05) !important;
-    padding:2rem !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    padding: 2rem !important;
   }
- 
+
 
   .payment_box {
     background: #FFFFFF;
-   	gap:10px;
+    gap: 10px;
     padding-top: 10px;
     height: 260px;
     margin-top: 20px;
@@ -169,18 +170,19 @@ color: #FFFFFF
     background: rgba(0, 0, 0, 0.05);
     height: 40px;
     width: 90%;
-     }
-	
-	.pay_box_acct{
-       height: 70px !important;
-   	}
-	
-	.pay_box2 {  margin: auto;
+  }
+
+  .pay_box_acct {
+    height: 70px !important;
+  }
+
+  .pay_box2 {
+    margin: auto;
     text-align: center;
     font-size: 14px;
     overflow-x: hidden;
-	align-content
-	}
+    align-content
+  }
 
   .xfooter {
     justify-content: center !important;
@@ -191,8 +193,8 @@ color: #FFFFFF
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
-	font-size:16px;
-	padding: .5rem 2rem !important;
+    font-size: 16px;
+    padding: .5rem 2rem !important;
     text-align: center;
     text-transform: capitalize;
     background: #C80909 !important;
@@ -206,8 +208,8 @@ color: #FFFFFF
     border-color: #e31010 !important;
 
   }
-  
-    .xbtn:focus {
+
+  .xbtn:focus {
     background: #e31010 !important;
     border-radius: 100px !important;
     border-color: #e31010 !important;
@@ -242,17 +244,17 @@ color: #FFFFFF
   .modal-dialog-tnb {
     position: relative
   }
-	
-	.xbtn_copy {
-  border: none;  
-background-color:transparent !important;
-  padding:0px !important;
+
+  .xbtn_copy {
+    border: none;
+    background-color: transparent !important;
+    padding: 0px !important;
   }
 
-.xbtn_copy:hover {
-color: #C80909;
-	background-color:transparent !important;
-	}
+  .xbtn_copy:hover {
+    color: #C80909;
+    background-color: transparent !important;
+  }
 </style>
 
 
@@ -273,7 +275,7 @@ color: #C80909;
 
 
       <div class="d-flex flex-column x-flex">
-        <div class="p-2 conv_amt_original"><?php echo (esc_html(isset($original) ? $original.'TNBC' : '')); ?></div>
+        <div class="p-2 conv_amt_original"><?php echo (esc_html(isset($original) ? $original . 'TNBC' : '')); ?></div>
         <div class="p-2 conv_amt"><?php echo (esc_html($price)); ?> TNBC</div>
         <!-- <div class = "p-2 empty_space">  </div> -->
         <div class="p-2 conv_rate">1TNBC = $<?php echo (esc_html($rate)) ?></div>
@@ -281,20 +283,22 @@ color: #C80909;
 
       </div>
 
-      <div class="modal-body  text-center xbody" > 
-        Send the above amount to the account below using the memo as description 
+      <div class="modal-body  text-center xbody">
+        Send the above amount to the account below using the memo as description
 
         <div class="payment_box d-flex flex-column x-flex">
 
           <div class="p-2 pay_det"> Account </div>
-			
+
           <div class="p-2 pay_box pay_box_acct d-flex flex-row ">
-			  
-			  <div class="pay_box2 " id ="copy-input" > <?php echo (esc_html($store_address)); ?> </div><button type="button" id="copy-button" onclick="copyClipboard()" class="btn-clipboard xbtn_copy" data-toggle="tooltip"  data-placement="bottom" title="Copy" > <i class="bi bi-clipboard fa-lg"></i> </button></div>
+
+            <div class="pay_box2 " id="copy-input"> <?php echo (esc_html($store_address)); ?> </div><button type="button" id="copy-button" onclick="copyClipboard()" class="btn-clipboard xbtn_copy" data-toggle="tooltip" data-placement="bottom" title="Copy"> <i class="bi bi-clipboard fa-lg"></i> </button>
+          </div>
 
           <div class="p-2 pay_det"> Memo </div>
-			  <div class="p-2 pay_box d-flex flex-row ">
-          <div class="pay_box2" id ="copy-input1"> <?php echo (esc_html($meta)); ?> </div><button type="button" id="copy-button1" onclick="copyClipboard1()" class="btn-clipboard xbtn_copy" data-toggle="tooltip"  data-placement="bottom" title="Copy" > <i class="bi bi-clipboard fa-lg"></i> </button></div>
+          <div class="p-2 pay_box d-flex flex-row ">
+            <div class="pay_box2" id="copy-input1"> <?php echo (esc_html($memo)); ?> </div><button type="button" id="copy-button1" onclick="copyClipboard1()" class="btn-clipboard xbtn_copy" data-toggle="tooltip" data-placement="bottom" title="Copy"> <i class="bi bi-clipboard fa-lg"></i> </button>
+          </div>
 
 
 
@@ -303,7 +307,7 @@ color: #C80909;
 
       </div>
       <div class="modal-footer xfooter">
-        <button type="button" id="paymentVerify" class="btn btn-primary btn-lg xbtn">Payment Made, Next</button>
+        <button type="button" id="paymentVerify" onClick="tnbpayShortcodePaymentVerify()" class="btn btn-primary btn-lg xbtn">Payment Made, Next</button>
 
       </div>
     </div>
@@ -328,16 +332,40 @@ color: #C80909;
 
 
 <script type="text/javascript">
-  // jQuery(window).on('load', function() {
-  //   jQuery('#exampleModal').modal({
-  //     backdrop: 'static',
-  //     keyboard: false
-  //   });
-  // });
-  function tnbpayShortcodePopup(){
+  function tnbpayShortcodePopup() {
     jQuery('#exampleModal').modal({
       backdrop: 'static',
       keyboard: false
     });
   }
+</script>
+
+<script type="text/javascript">
+  function tnbpayShortcodePaymentVerify() {
+
+    var data = {
+      'action': 'check_tnb_transaction_shortcode',
+      'price': <?php echo (esc_html($price)); ?>,
+      'memo': `<?php echo (esc_html($memo)); ?>`
+    };
+
+    document.getElementById("tnbLoader").style.display = "block";
+
+    // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+    jQuery.post(tnb_ajax_object.ajax_url, data, function(response) {
+      if (response == 1) {
+        alert('Payment Made');
+        location.reload();
+      } else if (response == 2) {
+        alert('You over paid. Please reach out to the store owner to discuss the return of the extra coins');
+        location.reload();
+      } else if (response == 3) {
+        alert('You underpaid, please pay the balance. You timer has been reset');
+        location.reload();
+      } else {
+        alert('Payment not made yet please verify.');
+      }
+      document.getElementById("tnbLoader").style.display = "none";
+    });
+  };
 </script>

@@ -330,6 +330,64 @@ function check_tnb_transaction()
     wp_die(); // this is required to terminate immediately and return a proper response
 }
 
+add_action('wp_ajax_check_tnb_transaction_shortcode', 'check_tnb_transaction_shortcode');
+add_action('wp_ajax_nopriv_check_tnb_transaction_shortcode', 'check_tnb_transaction_shortcode');
+
+function check_tnb_transaction_shortcode()
+{
+    global $wpdb; // Database access
+
+    if (!$_POST['price'] || !$_POST['memo']) {
+        echo (0);
+        wp_die();
+    }
+
+    $value = $wpdb->get_results($wpdb->prepare(
+        " SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_tnbpay_settings' "
+    ));
+    $serialized_data = (object)unserialize($value[0]->option_value);
+
+    $memo = $_POST['memo'];
+    $store_address = $serialized_data->tnb_wallet_address;
+    $price = $_POST['price'];
+
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, "http://54.183.16.194/bank_transactions?limit=100");
+    // Receive server response ...
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $server_output = curl_exec($ch);
+
+    curl_close($ch);
+
+    $data = json_decode($server_output, true);
+
+    $response = $data['results'];
+
+    foreach ($response as $key => $value) {
+        if ($value['memo'] == $memo && $value['recipient'] == $store_address && $value['amount'] > 0 &&  $value['block']['id']) {
+            //Figure out which memo to send
+            if ($value['amount'] == $price) {
+                echo (1);
+                wp_die();
+            }
+            echo (0);
+            wp_die();
+        } else if ($value['memo'] == $memo && $value['recipient'] == $store_address) {
+            //end the check quicker if amount is null
+            echo (0);
+            wp_die();
+        }
+    }
+    // $order->set_status('canceled');
+    // $order->save();
+    echo (0);
+
+    wp_die(); // this is required to terminate immediately and return a proper response
+}
+
 
 function my_enqueue()
 {
@@ -402,18 +460,24 @@ add_shortcode('tnbpay', 'tnbpay_shortcode');
 
 function tnbpay_shortcode($atts = [], $content = null, $tag = '')
 {
+    global $wpdb; // Database access
     $price = intval($atts['price']);
-    
+
     $rate = intval($atts['rate']);
 
     $rate = isset($rate) ? $rate : 10;
 
-    $meta = $atts['meta'];
+    $memo = $atts['memo'];
 
-    $store_address = $atts['address'];
+    $value = $wpdb->get_results(
+        " SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_tnbpay_settings' "
+    );
+    $serialized_data = (object)unserialize($value[0]->option_value);
 
-    if(!isset($price) || !isset($meta) || !isset($store_address))
-        return "Store [address] or [price] or [meta] not set!" ;
+    $store_address = $serialized_data->tnb_wallet_address;
+
+    if (!isset($price) || !isset($memo))
+        return "Store or [price] or [memo] not set!";
 
     $content = '<div onClick="tnbpayShortcodePopup()"> <img src="' . plugin_dir_url(dirname(__FILE__)) . 'TNBPay/images/tnbpay.jpg" width="185" height="30" /> </div>';
 
