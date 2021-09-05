@@ -463,16 +463,14 @@ function tnbpay_shortcode($atts = [], $content = null, $tag = '')
     global $wpdb; // Database access
     $price = intval($atts['price']);
 
-    $rate = intval($atts['rate']);
-
-    $rate = isset($rate) ? $rate : 10;
-
     $memo = 'shortcode-'.base64_encode(rand(100000000, 999999999));
 
     $value = $wpdb->get_results(
         " SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_tnbpay_settings' "
     );
     $serialized_data = (object)unserialize($value[0]->option_value);
+
+    $rate = floatval($serialized_data->tnb_rate);
 
     $store_address = $serialized_data->tnb_wallet_address;
 
