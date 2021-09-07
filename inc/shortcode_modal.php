@@ -356,6 +356,7 @@
       if (response == 1) {
         alert('Payment Made');
         // location.reload();
+        jQuery('#exampleModal').modal('hide');
         document.getElementById(`<?php echo (esc_html($submitButton)); ?>`).style.display = "block";
       } else {
         alert('Payment not made yet please verify.');
