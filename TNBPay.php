@@ -463,7 +463,7 @@ function tnbpay_shortcode($atts = [], $content = null, $tag = '')
     global $wpdb; // Database access
     $price = intval($atts['price']);
 
-    $submitButton = intval($atts['tnbSubmit']);
+    $submitButton = $atts['triggerid'];
 
     $memo = 'shortcode-'.base64_encode(rand(100000000, 999999999));
 
