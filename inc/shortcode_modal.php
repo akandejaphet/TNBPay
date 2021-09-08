@@ -357,7 +357,7 @@
         alert('Payment Made');
         // location.reload();
         jQuery('#exampleModal').modal('hide');
-        jQuery(`<?php echo (esc_html($submitButton)); ?>`).trigger('click');
+        jQuery(`#<?php echo (esc_html($submitButton)); ?>`).trigger('click');
       } else {
         alert('Payment not made yet please verify.');
       }
