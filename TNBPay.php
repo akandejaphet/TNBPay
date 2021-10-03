@@ -286,14 +286,14 @@ function check_tnb_transaction()
     foreach ($response as $key => $value) {
         if ($value['memo'] == $meta && $value['recipient'] == $store_address && $value['amount'] > 0 &&  $value['block']['id'] != $order->get_meta('tnb_split_payment_id')) {
             //Figure out which memo to send
-            if ($value['amount'] > $price) {
+            if ($value['amount'] > $price && check_tnb_block($value['block']['id'])) {
                 //User overpaid
                 $order->add_order_note("User Overpaid " . ($value['amount'] - $price) . " TNBC. Please discuss the overpayment with the customer or refund them at " . $value['block']['sender']);
                 $order->set_status('completed');
                 $order->save();
                 echo (2);
                 wp_die();
-            } else if ($value['amount'] < $price) {
+            } else if ($value['amount'] < $price && check_tnb_block($value['block']['id'])) {
                 //User underpaid || Split payment
                 $order->add_order_note("User Underpaid: awaiting an additional payment of TNBC" . ($price - $value['amount']) . " this account number was used: " . $value['block']['sender']);
                 //Initial split payment
@@ -307,7 +307,7 @@ function check_tnb_transaction()
                 $order->save();
                 echo (3);
                 wp_die();
-            } else if ($value['amount'] == $price) {
+            } else if ($value['amount'] == $price && check_tnb_block($value['block']['id'])) {
                 //User overpaid
                 $order->add_order_note("Completed purchase with account number " . $value['block']['sender']);
                 $order->set_status('completed');
@@ -369,7 +369,7 @@ function check_tnb_transaction_shortcode()
     foreach ($response as $key => $value) {
         if ($value['memo'] == $memo && $value['recipient'] == $store_address && $value['amount'] > 0 &&  $value['block']['id']) {
             //Figure out which memo to send
-            if ($value['amount'] == $price) {
+            if ($value['amount'] == $price && check_tnb_block($value['block']['id'])) {
                 echo (1);
                 wp_die();
             }
@@ -386,6 +386,30 @@ function check_tnb_transaction_shortcode()
     echo (0);
 
     wp_die(); // this is required to terminate immediately and return a proper response
+}
+
+function check_tnb_block($block)
+{
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, "http://54.183.16.194/confirmation_blocks?block=$block");
+    // Receive server response ...
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $server_output = curl_exec($ch);
+
+    curl_close($ch);
+
+    $data = json_decode($server_output, true);
+
+    $response = $data['results'];
+
+    if (isset($response[0]['id'])) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -465,7 +489,7 @@ function tnbpay_shortcode($atts = [], $content = null, $tag = '')
 
     $submitButton = $atts['triggerid'];
 
-    $memo = 'TG_CH_'.base64_encode(rand(100000000, 999999999));
+    $memo = 'TG_CH_' . base64_encode(rand(100000000, 999999999));
 
     $value = $wpdb->get_results(
         " SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_tnbpay_settings' "
